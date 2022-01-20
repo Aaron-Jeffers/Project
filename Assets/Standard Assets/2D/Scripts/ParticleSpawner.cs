@@ -10,32 +10,81 @@ public class ParticleSpawner : NetworkBehaviour
 
     private void Update()
     {
-        if(!IsOwner)
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            return;
+            if (IsServer)
+            {
+                SpawnParticleOnTargetServerRpc(NetworkManager.ConnectedClientsList[0].ClientId);
+            }
+            else
+            {
+                sendTargetFromClientServerRpc(0);
+            }
         }
-        if(!Input.GetKeyDown(KeyCode.Space))
+          
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void sendTargetFromClientServerRpc(int targetId)
+    {
+        SpawnParticleOnTargetClientRpc(NetworkManager.ConnectedClientsList[targetId].ClientId);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SpawnParticleOnTargetServerRpc(ulong targertClientId)
+    {
+        if(IsServer)
         {
-            return;
+            SpawnParticleOnTargetClientRpc(targertClientId);
+        }        
+    }
+
+    [ClientRpc]
+    private void SpawnParticleOnTargetClientRpc(ulong targetClientId)
+    {
+        if(IsServer)
+        {
+            NetworkManager.Singleton.ConnectedClients.TryGetValue(targetClientId, out var networkedClient);
+            Instantiate(particlePrefab, networkedClient.PlayerObject.GetComponent<Transform>().position, networkedClient.PlayerObject.GetComponent<Transform>().rotation);
         }
-
-        SpawnParticleServerRpc();
-
-        Instantiate(particlePrefab, transform.position, transform.rotation);
-    }
-    
-    [ServerRpc(Delivery = RpcDelivery.Unreliable)]
-    private void SpawnParticleServerRpc()
-    {
-        SpawnParticleClientRpc();
-    }
-
-    [ClientRpc(Delivery = RpcDelivery.Unreliable)]
-    private void SpawnParticleClientRpc()
-    {
-        if(!IsOwner)
+        else
         {
-            Instantiate(particlePrefab, transform.position, transform.rotation);
-        }       
+            if(targetClientId == OwnerClientId)
+            {
+                Instantiate(particlePrefab, transform.position, transform.rotation);
+            }
+        }
     }
+
+    //private void Update()
+    //{
+    //    if(!IsOwner)
+    //    {
+    //        return;
+    //    }
+    //    if(!Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        return;
+    //    }
+
+    //    SpawnParticleServerRpc();
+
+    //    Instantiate(particlePrefab, transform.position, transform.rotation);
+    //}
+
+    //[ServerRpc(Delivery = RpcDelivery.Unreliable)]
+    //private void SpawnParticleServerRpc()
+    //{
+    //    SpawnParticleClientRpc();
+    //}
+
+    //[ClientRpc(Delivery = RpcDelivery.Unreliable)]
+    //private void SpawnParticleClientRpc()
+    //{
+    //    if(!IsOwner)
+    //    {
+    //        Instantiate(particlePrefab, transform.position, transform.rotation);
+    //    }       
+    //}
 }

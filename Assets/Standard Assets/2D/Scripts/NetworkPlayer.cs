@@ -11,10 +11,45 @@ public class NetworkPlayer : NetworkBehaviour
     public Vector3 componentTransform;
     public ulong localClientID;
     private NetworkVariableVector3 networkClientScale = new NetworkVariableVector3();
+    public int theScore;
     
     public override void NetworkStart()
     {
         localClientID = NetworkManager.Singleton.LocalClientId;
+        theScore = 0;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("Mushroom"))
+        {
+            if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
+            {
+                coinCollectedServerRpc(OwnerClientId);
+            }
+        }        
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void coinCollectedServerRpc(ulong clientId)
+    {
+        //Request the players to send all their scores 
+        coinCollectedClientRpc(clientId);
+    }
+
+    [ClientRpc]
+    private void coinCollectedClientRpc(ulong targetClientId)
+    {
+        //get the TargetClientId, compare it to the owner id and if the same update the score
+        if(targetClientId == OwnerClientId)
+        {
+            GameObject theClientObject = this.gameObject;
+
+            GetComponent<NetworkPlayer>().theScore += 1;
+        }
+
+        GameObject.Find("MultiplayerManager").GetComponent<MultiplayerScore>().syncScoreToAllClientServerRpc(OwnerClientId, theScore);
+        Debug.Log("the score of player " + targetClientId + " is " + GetComponent<NetworkPlayer>().theScore);
     }
 
     public void callTheRPCToFlip()

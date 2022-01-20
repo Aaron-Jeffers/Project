@@ -5,7 +5,8 @@ using MLAPI.Transports.UNET;
 public class MenuScript : MonoBehaviour
 {
     public GameObject panel;
-    public string ipAddress = "127.0.0.1";
+    private string defaultIPAddress = "127.0.0.1";
+    public string ipAddress;
     UNetTransport transport;
 
     public void HostButton()
