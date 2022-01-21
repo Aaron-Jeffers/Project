@@ -86,7 +86,7 @@ public class MultiplayerHealth : NetworkBehaviour
         int x = 0;
         foreach (KeyValuePair<ulong, int> entry in playerHealthDictionary)
         {
-            GUI.Label(new Rect(500, 60 + (15 * x), 300, 20), "PlayerID " + entry.Key + " has the Health of " + entry.Value);
+            GUI.Label(new Rect(500, 60 + (15 * x), 300, 20), "PlayerID " + entry.Key + " has " + entry.Value + " health");
             x++;
         }
     }

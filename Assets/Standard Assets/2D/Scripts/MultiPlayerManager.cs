@@ -1,38 +1,24 @@
 using MLAPI;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using MLAPI.SceneManagement;
+using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
+using MLAPI.NetworkVariable.Collections;
 
-public class MultiPlayerManager : MonoBehaviour
+public class MultiPlayerManager : NetworkBehaviour
 {
-    //void OnGUI()
-    //{
-    //    GUILayout.BeginArea(new Rect(10, 10, 300, 300));
-    //    if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
-    //    {
-    //        StartButtons();
-    //    }
-    //    else
-    //    {
-    //        StatusLabels();
-    //    }
+    string sceneName;
 
-    //    GUILayout.EndArea();
-    //}
-
-    //static void StartButtons()
-    //{
-    //    if (GUILayout.Button("Host")) NetworkManager.Singleton.StartHost();
-    //    if (GUILayout.Button("Client")) NetworkManager.Singleton.StartClient();
-    //    if (GUILayout.Button("Server")) NetworkManager.Singleton.StartServer();
-    //}
-
-    //static void StatusLabels()
-    //{
-    //    var mode = NetworkManager.Singleton.IsHost ?
-    //        "Host" : NetworkManager.Singleton.IsServer ? "Server" : "Client";
-
-    //    GUILayout.Label("Transport: " +
-    //        NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetType().Name);
-    //    GUILayout.Label("Mode: " + mode);
-        
-    //}
+    private void Start()
+    {
+        Time.timeScale = 1;
+        sceneName = SceneManager.GetActiveScene().name;
+    }
+    public void RestartButton()
+    {
+        GetComponent<MultiplayerScore>().Restart();
+        NetworkSceneManager.SwitchScene(sceneName);        
+    }
 }

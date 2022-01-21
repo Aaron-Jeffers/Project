@@ -20,9 +20,16 @@ public class Mushroom : NetworkBehaviour
 
     public void UpdatePosition()
     {
-        int nextPos = Random.Range(0, positions.Length - 1);        
-        transform.position = positions[nextPos];
-        CallToMoveMushroom(transform.position);
+        int nextPos = Random.Range(0, positions.Length - 1); 
+        if(nextPos != positionNumber)
+        {
+            transform.position = positions[nextPos];
+            CallToMoveMushroom(transform.position);
+        }
+        else
+        {
+            UpdatePosition();
+        }
     }
 
     void CallToMoveMushroom(Vector3 newPos)

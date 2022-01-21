@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using MLAPI;
+using MLAPI.Messaging;
+using MLAPI.NetworkVariable;
 
 [RequireComponent(typeof (PlatformerCharacter2D))]
 public class Platformer2DUserControl : NetworkBehaviour
@@ -13,9 +15,6 @@ public class Platformer2DUserControl : NetworkBehaviour
     {
         //m_Character = GetComponent<PlatformerCharacter2D>();
     }
-
-
-
 
     private void FixedUpdate()
     {
@@ -31,7 +30,8 @@ public class Platformer2DUserControl : NetworkBehaviour
                 player.Move(h, crouch, m_Jump);
                 m_Jump = false;
             }         
-        } 
+        }
+        
     }
 }
 

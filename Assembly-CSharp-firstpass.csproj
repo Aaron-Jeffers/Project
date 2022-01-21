@@ -56,7 +56,9 @@
     <Compile Include="Assets\Standard Assets\2D\Scripts\MenuScript.cs" />
     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\ButtonHandler.cs" />
     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\VirtualInput.cs" />
+    <Compile Include="Assets\Standard Assets\2D\Scripts\MultiplayerHealth.cs" />
     <Compile Include="Assets\Standard Assets\2D\Scripts\MultiPlayerManager.cs" />
+    <Compile Include="Assets\Standard Assets\2D\Scripts\Enemy.cs" />
     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\TouchPad.cs" />
     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\Joystick.cs" />
     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\TiltInput.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\PlatformSpecific\StandaloneInput.cs" />
     <Compile Include="Assets\Standard Assets\2D\Scripts\Camera2DFollow.cs" />
     <Compile Include="Assets\Standard Assets\2D\Scripts\EnemyReaction.cs" />
+    <Compile Include="Assets\Standard Assets\2D\Scripts\Mushroom.cs" />
     <Compile Include="Assets\Standard Assets\2D\Scripts\NetworkPlayer.cs" />
     <Compile Include="Assets\Standard Assets\2D\Scripts\Restarter.cs" />
     <Compile Include="Assets\Standard Assets\2D\Scripts\CameraFollow.cs" />
@@ -74,11 +77,9 @@
     <Compile Include="Assets\Standard Assets\2D\Scripts\MultiplayerScore.cs" />
     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\MobileControlRig.cs" />
     <Compile Include="Assets\Standard Assets\CrossPlatformInput\Scripts\AxisTouchButton.cs" />
-    <Compile Include="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs" />
     <Compile Include="Assets\Standard Assets\2D\Scripts\MovingPlatform.cs" />
-    <Compile Include="Assets\Standard Assets\2D\Scripts\Enemy.cs" />
-    <Compile Include="Assets\Standard Assets\2D\Scripts\MultiplayerHealth.cs" />
-    <Compile Include="Assets\Standard Assets\2D\Scripts\Mushroom.cs" />
+    <Compile Include="Assets\Standard Assets\2D\Scripts\PlatformerCharacter2D.cs" />
+    <Compile Include="Assets\Standard Assets\2D\Scripts\Projectile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />

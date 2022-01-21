@@ -14,12 +14,44 @@ public class NetworkPlayer : NetworkBehaviour
     public int theScore;
     public int theHealth;
     [SerializeField] private GameObject particlePrefab;
+    [SerializeField] private GameObject projectilePrefab;
 
     public override void NetworkStart()
     {
         localClientID = NetworkManager.Singleton.LocalClientId;
         theScore = 0;
     }
+
+    //public void LaunchProjectile()
+    //{
+    //    SpawnProjectileOnTargetServerRpc(localClientID);
+    //}
+
+    //[ServerRpc(RequireOwnership = false)]
+    //private void SpawnProjectileOnTargetServerRpc(ulong targertClientId)
+    //{
+    //    if (IsServer)
+    //    {
+    //        SpawnProjectileOnTargetClientRpc(targertClientId);
+    //    }
+    //}
+
+    //[ClientRpc]
+    //private void SpawnProjectileOnTargetClientRpc(ulong targetClientId)
+    //{
+    //    if (IsServer)
+    //    {
+    //        NetworkManager.Singleton.ConnectedClients.TryGetValue(targetClientId, out var networkedClient);
+    //        GameObject obj = Instantiate(projectilePrefab, networkedClient.PlayerObject.GetComponent<Transform>().position, networkedClient.PlayerObject.GetComponent<Transform>().rotation);       
+    //    }
+    //    else
+    //    {
+    //        if (targetClientId == OwnerClientId)
+    //        {
+    //            GameObject obj = Instantiate(particlePrefab, transform.position, transform.rotation);
+    //        }
+    //    }
+    //}
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -79,7 +111,8 @@ public class NetworkPlayer : NetworkBehaviour
                 case "Mushroom":
                     GetComponent<NetworkPlayer>().theScore += 1;
                     GameObject.Find("MultiplayerManager").GetComponent<MultiplayerScore>().syncScoreToAllClientServerRpc(OwnerClientId, theScore);
-                    if(play)
+
+                    if (play)
                     {
                         GameObject.FindGameObjectWithTag(collision).GetComponent<Mushroom>().UpdatePosition();
                         GameObject.FindGameObjectWithTag(collision).GetComponent<AudioSource>().Play();

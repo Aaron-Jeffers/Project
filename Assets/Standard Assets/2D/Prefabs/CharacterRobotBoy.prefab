@@ -350,6 +350,8 @@ MonoBehaviour:
   theHealth: 100
   particlePrefab: {fileID: 6498520111801627992, guid: 62c8e60aa72a9c74b86f1490315643f4,
     type: 3}
+  projectilePrefab: {fileID: 2564376104190988641, guid: 3dd92b8f67fd7f947a5ddf8795717bbb,
+    type: 3}
 --- !u!1 &100004
 GameObject:
   m_ObjectHideFlags: 0

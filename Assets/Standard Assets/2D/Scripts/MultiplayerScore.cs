@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
@@ -8,6 +9,11 @@ using MLAPI.NetworkVariable.Collections;
 
 public class MultiplayerScore : NetworkBehaviour
 {
+    public GameObject panel;
+    public Text text;
+
+    public int restartCounter = 1;
+
     private NetworkVariableInt networkClientInt = new NetworkVariableInt(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.Everyone });
     private NetworkVariableULong networkClientIDUlong = new NetworkVariableULong(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.Everyone });
     private NetworkVariableBool networkClientIDChangedBool = new NetworkVariableBool(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.Everyone });
@@ -86,8 +92,19 @@ public class MultiplayerScore : NetworkBehaviour
         int x = 0;
         foreach(KeyValuePair<ulong,int> entry in playerScoresDictionary)
         {
-            GUI.Label(new Rect(10, 60+ (15 * x), 300, 20), "PlayerID " + entry.Key + " has the score of " + entry.Value);
+            GUI.Label(new Rect(10, 60+ (15 * x), 300, 20), "PlayerID " + entry.Key + " has a score of " + entry.Value);
             x++;
+            if (entry.Value >= 10 * restartCounter)
+            {
+                Time.timeScale = 0;
+                panel.SetActive(true);
+                text.text = "PlayerID " + entry.Key + " won the game with a score of: " + entry.Value;
+            }
         }
+    }
+
+    public void Restart()
+    {
+        restartCounter++;
     }
 }
