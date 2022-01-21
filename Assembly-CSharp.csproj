@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\MultiPlayerManager.cs" />
     <Compile Include="Assets\Scripts\MenuScript.cs" />
+    <Compile Include="Assets\MultiplayerHealth.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Environment Tiles\Grass\PNG Grass\Spritesheet\sheet.xml" />

@@ -245,7 +245,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100002}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c066b49d1732e9449872f5c9d1feba7e, type: 3}
   m_Name: 
@@ -346,6 +346,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   componentTransform: {x: 0, y: 0, z: 0}
   localClientID: 0
+  theScore: 0
+  theHealth: 100
+  particlePrefab: {fileID: 6498520111801627992, guid: 62c8e60aa72a9c74b86f1490315643f4,
+    type: 3}
 --- !u!1 &100004
 GameObject:
   m_ObjectHideFlags: 0

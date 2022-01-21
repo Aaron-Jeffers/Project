@@ -12,7 +12,9 @@ public class NetworkPlayer : NetworkBehaviour
     public ulong localClientID;
     private NetworkVariableVector3 networkClientScale = new NetworkVariableVector3();
     public int theScore;
-    
+    public int theHealth;
+    [SerializeField] private GameObject particlePrefab;
+
     public override void NetworkStart()
     {
         localClientID = NetworkManager.Singleton.LocalClientId;
@@ -21,35 +23,94 @@ public class NetworkPlayer : NetworkBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Mushroom"))
+        string collisionString = collision.gameObject.tag;
+        if (collision.gameObject.CompareTag("Mushroom") || collision.gameObject.CompareTag("Enemy"))
+        {
+            //collision.gameObject.GetComponent<AudioSource>().Play();
+            if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
+            {
+                collisionServerRpc(OwnerClientId, collisionString, true);
+            }
+        }
+        //if (collision.gameObject.CompareTag("Enemy"))
+        //{
+        //    collision.gameObject.GetComponent<AudioSource>().Play();
+        //}
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        string collisionString = collision.gameObject.tag;
+
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             if (NetworkManager.Singleton.LocalClientId == OwnerClientId)
             {
-                coinCollectedServerRpc(OwnerClientId);
+                collisionServerRpc(OwnerClientId, collisionString, false);
             }
-        }        
+        }
     }
 
+    //private void OnCollisionExit2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Enemy"))
+    //    {
+    //        collision.gameObject.GetComponent<AudioSource>().Stop();
+    //    }
+    //}
+
     [ServerRpc(RequireOwnership = false)]
-    public void coinCollectedServerRpc(ulong clientId)
+    public void collisionServerRpc(ulong clientId, string collisionString, bool play)
     {
         //Request the players to send all their scores 
-        coinCollectedClientRpc(clientId);
+        collisionClientRpc(clientId, collisionString, play);
     }
 
     [ClientRpc]
-    private void coinCollectedClientRpc(ulong targetClientId)
+    private void collisionClientRpc(ulong targetClientId, string collision, bool play)
     {
         //get the TargetClientId, compare it to the owner id and if the same update the score
         if(targetClientId == OwnerClientId)
         {
             GameObject theClientObject = this.gameObject;
 
-            GetComponent<NetworkPlayer>().theScore += 1;
+            switch (collision)
+            {
+                case "Mushroom":
+                    GetComponent<NetworkPlayer>().theScore += 1;
+                    GameObject.Find("MultiplayerManager").GetComponent<MultiplayerScore>().syncScoreToAllClientServerRpc(OwnerClientId, theScore);
+                    if(play)
+                    {
+                        GameObject.FindGameObjectWithTag(collision).GetComponent<Mushroom>().UpdatePosition();
+                        GameObject.FindGameObjectWithTag(collision).GetComponent<AudioSource>().Play();
+                    }                   
+                    break;
+                case "Enemy":
+                    GetComponent<NetworkPlayer>().theHealth -= 1;
+                    GameObject.Find("MultiplayerManager").GetComponent<MultiplayerHealth>().syncHealthToAllClientServerRpc(OwnerClientId, theHealth);
+                    if (play)
+                    {
+                        GameObject.FindGameObjectWithTag(collision).GetComponent<AudioSource>().Play();
+                    }
+
+                    if (IsServer)
+                    {
+                        NetworkManager.Singleton.ConnectedClients.TryGetValue(targetClientId, out var networkedClient);
+                        Instantiate(particlePrefab, networkedClient.PlayerObject.GetComponent<Transform>().position, networkedClient.PlayerObject.GetComponent<Transform>().rotation);
+                    }
+                    else
+                    {
+                        if (targetClientId == OwnerClientId)
+                        {
+                            Instantiate(particlePrefab, transform.position, transform.rotation);
+                        }
+                    }
+                    break;
+            }
         }
 
-        GameObject.Find("MultiplayerManager").GetComponent<MultiplayerScore>().syncScoreToAllClientServerRpc(OwnerClientId, theScore);
-        Debug.Log("the score of player " + targetClientId + " is " + GetComponent<NetworkPlayer>().theScore);
+        //GameObject.Find("MultiplayerManager").GetComponent<MultiplayerScore>().syncScoreToAllClientServerRpc(OwnerClientId, theScore);
+        //Debug.Log("the score of player " + targetClientId + " is " + GetComponent<NetworkPlayer>().theScore);
     }
 
     public void callTheRPCToFlip()
