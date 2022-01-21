@@ -17,8 +17,9 @@ public class MultiPlayerManager : NetworkBehaviour
         sceneName = SceneManager.GetActiveScene().name;
     }
     public void RestartButton()
-    {
+    {  
+        NetworkSceneManager.SwitchScene(sceneName);
         GetComponent<MultiplayerScore>().Restart();
-        NetworkSceneManager.SwitchScene(sceneName);        
+        GetComponent<MultiplayerHealth>().Restart();
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
@@ -8,6 +9,11 @@ using MLAPI.NetworkVariable.Collections;
 
 public class MultiplayerHealth : NetworkBehaviour
 {
+    public GameObject panel;
+    public Text text;
+
+    public int restartCounter = 0;
+
     private NetworkVariableInt networkClientInt = new NetworkVariableInt(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.Everyone });
     private NetworkVariableULong networkClientIDUlong = new NetworkVariableULong(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.Everyone });
     private NetworkVariableBool networkClientIDChangedBool = new NetworkVariableBool(new NetworkVariableSettings { WritePermission = NetworkVariablePermission.Everyone });
@@ -88,6 +94,17 @@ public class MultiplayerHealth : NetworkBehaviour
         {
             GUI.Label(new Rect(500, 60 + (15 * x), 300, 20), "PlayerID " + entry.Key + " has " + entry.Value + " health");
             x++;
+            if(entry.Value <= (0 - (100* restartCounter)))
+            {
+                Time.timeScale = 0;
+                panel.SetActive(true);
+                text.text = "PlayerID " + entry.Key + " lost the game with zero health";
+            }
         }
+    }
+
+    public void Restart()
+    {
+        restartCounter += 1;
     }
 }
